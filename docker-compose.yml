@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PostgreSQL база данных
+  postgres:
+    # Используем готовый образ PostgreSQL
+    image: postgres:18-alpine
+    container_name: express_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - '5432:5432'
+    volumes:
+      # Постоянное хранение данных БД в Docker томе под названием postgres_data
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      # Подключаем к общей сети приложения
+      - app-network
+    healthcheck:
+      # Проверка доступности БД, которую docker-compose делает самостоятельно
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-appuser}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin для управления БД через браузер (опционально, но полезно для обучения)
+  pgadmin:
+    # Используем готовый образ pgAdmin
+    image: dpage/pgadmin4
+    container_name: express_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - '5050:5050'
+    # Зависимость от сервиса postgres, чтобы pgAdmin запускался после БД
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  # Панель управления уже самой ORM Prisma
+  prisma-studio:
+    # Собираем тот же образ, что и для приложения, но запускаем Prisma Studio а не Express
+    build: .
+    container_name: express_prisma_studio
+    ports:
+      - '5555:5555'
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
+    volumes:
+      # Подключаем к общему тому приложения, чтобы изменения внутри контейнера сохранялись
+      - .:/usr/src/app
+      # Node modules подключаем к анонимному тому (не указываем его), таким образом node_modules будут существовать только пока контейнер запущен
+      - /usr/src/app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npx prisma studio --port 5555 --browser none
+    networks:
+      - app-network
+
+# Определяем общую сеть
+networks:
+  app-network:
+    driver: bridge
+
+# Данные базы данных будут храниться в отдельном Docker томе
+volumes:
+  postgres_data:

@@ -1,0 +1,30 @@
+{
+  "name": "express",
+  "version": "1.0.0",
+  "description": "Репозиторий создан с целью изучения и поделен на ветки/этапы, вида stage-0, stage-1, stage-2 и т.д. Если этапа со следующим номером нет, значит он пока в процессе ¯\\\\_(ツ)_/¯",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nexoory/prisma-postgresql-learning.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nexoory/prisma-postgresql-learning/issues"
+  },
+  "homepage": "https://github.com/nexoory/prisma-postgresql-learning#readme",
+  "dependencies": {
+    "@prisma/client": "^7.2.0",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "typescript": "^5.9.3",
+    "prisma": "^7.2.0"
+  }
+}
