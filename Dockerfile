@@ -22,4 +22,4 @@ EXPOSE 3000
 EXPOSE 5555
 
 # Команда запуска (будет переопределена в docker-compose для разработки)
-CMD ["yarn", "start"]
+CMD ["yarn", "dev"]

@@ -4,7 +4,13 @@
   "description": "Репозиторий создан с целью изучения и поделен на ветки/этапы, вида stage-0, stage-1, stage-2 и т.д. Если этапа со следующим номером нет, значит он пока в процессе ¯\\\\_(ツ)_/¯",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio --port 5555 --browser none",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
   },
   "repository": {
     "type": "git",
@@ -20,11 +26,14 @@
   "homepage": "https://github.com/nexoory/prisma-postgresql-learning#readme",
   "dependencies": {
     "@prisma/client": "^7.2.0",
-    "express": "^5.2.1"
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.3",
+    "express": "^5.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
-    "typescript": "^5.9.3",
+    "nodemon": "^3.1.11",
     "prisma": "^7.2.0"
   }
 }

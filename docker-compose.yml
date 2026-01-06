@@ -34,7 +34,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
-      - '5050:5050'
+      - '5050:80'
     # Зависимость от сервиса postgres, чтобы pgAdmin запускался после БД
     depends_on:
       postgres:
@@ -50,7 +50,7 @@ services:
     ports:
       - '5555:5555'
     environment:
-      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
     volumes:
       # Подключаем к общему тому приложения, чтобы изменения внутри контейнера сохранялись
       - .:/usr/src/app
@@ -59,9 +59,39 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: npx prisma studio --port 5555 --browser none
+    command: npx prisma studio --port 5555 --browser none --url postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
     networks:
       - app-network
+
+  app:
+    build: .
+    container_name: express_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '8000:8000'
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      NODE_ENV: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - app-network
+    command: yarn dev
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://localhost:8000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
 
 # Определяем общую сеть
 networks:
