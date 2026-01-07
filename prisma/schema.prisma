@@ -1,0 +1,34 @@
+generator client {
+  // Говорим что Prisma будет работать с JavaScript/TypeScript
+  provider = "prisma-client-js"
+  // Путь, куда будут складываться сгенерированные типы и клиент
+  output   = "../src/generated"
+}
+
+datasource db {
+  // Указываем с какой базой данных будет работать Prisma
+  provider = "postgresql"
+}
+
+//Объявляем сущность Task, то есть, описываем таблицу в базе данных
+model Task {
+  // Уникальный идентификатор задачи, который будет автоинкрементироваться по умолчанию
+  id          Int      @id @default(autoincrement())
+  title       String
+  // Необязательное поле string
+  description String?
+  // Директива @map позволяет переименовать поле в базе данных, чтобы оно соответствовало стилю именования (snake_case), но на клиенте оставалось в camelCase
+  isCompleted Boolean  @default(false) @map("is_completed")
+  //Функция now() устанавливает текущее время при создании записи
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  dueDate     DateTime? @map("due_date")
+  
+  // Создаем индексы для полей isCompleted и createdAt, чтобы ускорить запросы по этим полям
+  // это увеличивает объем базы данных, но значительно повышает производительность при фильтрации и сортировке по этим полям
+  @@index([isCompleted])
+  @@index([createdAt])
+  
+  // То же самое что и @map на уровне полей, но для всей модели
+  @@map("tasks")
+}
