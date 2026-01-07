@@ -53,13 +53,13 @@ services:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
     volumes:
       # Подключаем к общему тому приложения, чтобы изменения внутри контейнера сохранялись
-      - .:/usr/src/app
+      - .:/app
       # Node modules подключаем к анонимному тому (не указываем его), таким образом node_modules будут существовать только пока контейнер запущен
-      - /usr/src/app/node_modules
+      - /app/node_modules
     depends_on:
       postgres:
         condition: service_healthy
-    command: npx prisma studio --port 5555 --browser none --url postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+    command: npx prisma studio --port 5555 --browser none
     networks:
       - app-network
 
@@ -75,8 +75,8 @@ services:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
       NODE_ENV: development
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - .:/app
+      - /app/node_modules
     networks:
       - app-network
     command: yarn dev

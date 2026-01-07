@@ -14,9 +14,6 @@ RUN yarn
 # Копируем весь исходный код
 COPY . .
 
-# Устанавливаем Prisma CLI глобально (опционально, но удобно)
-RUN yarn global add prisma
-
 # Открываем порт, на котором будет работать Express сервер и Prisma Studio
 EXPOSE 3000
 EXPOSE 5555
