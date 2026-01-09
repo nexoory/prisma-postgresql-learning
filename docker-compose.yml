@@ -46,6 +46,7 @@ services:
   prisma-studio:
     # Собираем тот же образ, что и для приложения, но запускаем Prisma Studio а не Express
     build: .
+    user: '${UID}:${GID}'
     container_name: express_prisma_studio
     ports:
       - '5555:5555'
@@ -69,6 +70,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    user: '${UID}:${GID}'
     ports:
       - '8000:8000'
     environment:
