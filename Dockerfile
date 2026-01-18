@@ -11,12 +11,6 @@ COPY yarn.lock ./
 # Устанавливаем зависимости
 RUN yarn
 
-# Копируем конфиг Prisma
-COPY prisma ./prisma/
-
-# Генерируем клиент Prisma
-RUN yarn prisma:generate
-
 # Копируем весь исходный код
 COPY . .
 

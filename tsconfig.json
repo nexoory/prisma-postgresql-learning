@@ -16,7 +16,12 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@infrastructure/*": ["infrastructure/*"],
+      "@application/*": ["application/*"],
+      "@domain/*": ["domain/*"],
+      "@shared/*": ["shared/*"],
+      "@prisma/*": ["infrastructure/database/prisma/*"]
     }
   },
   "include": ["src/**/*"],

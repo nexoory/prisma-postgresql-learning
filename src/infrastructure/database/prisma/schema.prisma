@@ -2,7 +2,7 @@ generator client {
   // Говорим что Prisma будет работать с JavaScript/TypeScript
   provider = "prisma-client-js"
   // Путь, куда будут складываться сгенерированные типы и клиент
-  output   = "../src/generated/prisma"
+  output   = "./client"
 }
 
 datasource db {
